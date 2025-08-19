@@ -1,0 +1,41 @@
+sequenceDiagram
+  participant browser 
+  participant server
+  participant client
+
+  client->>browser: Fill text input field
+  client->>browser: click "Save" button
+
+  The browser starts executing the JavaScript code that sends a POST request to the server.
+  browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+  activate server 
+  The server updates notes list.
+  server->>browser text/html document, Location: https://studies.cs.helsinki.fi/exampleapp/notes 
+  deactivate server
+
+  The browser is redirected to Location: https://studies.cs.helsinki.fi/exampleapp/notes
+  All loading page process starts all over
+  
+  browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes 
+  activate server 
+  server-->>browser: HTML document 
+  deactivate server
+
+  The browser fetches for the CSS file linked in head tag in HTML document, main.css. 
+  browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  activate server
+  server->>browser: CSS file
+  deactivate server
+
+  The browser fetches the JavaScript file linked in head tag in HTML document, main.js. 
+  browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+  activate server 
+  server-->>browser: JavaScript file  
+  deactivate server
+
+  The browser executes JavaScript code and fetches the JSON data ,data.json.
+  browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  activate server
+  server->>browser: JSON file
+  deactivate server
+  
