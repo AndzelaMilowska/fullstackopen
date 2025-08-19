@@ -10,7 +10,7 @@ sequenceDiagram
   browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
   activate server 
   The server updates notes list.
-  server->>browser text/html document, Location: https://studies.cs.helsinki.fi/exampleapp/notes 
+  server-->>browser text/html document, Location: https://studies.cs.helsinki.fi/exampleapp/notes 
   deactivate server
 
   The browser is redirected to Location: https://studies.cs.helsinki.fi/exampleapp/notes
@@ -18,13 +18,13 @@ sequenceDiagram
   
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes 
   activate server 
-  server->>browser: HTML document 
+  server-->>browser: HTML document 
   deactivate server
 
   The browser fetches for the CSS file linked in head tag in HTML document, main.css. 
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
   activate server
-  server->>browser: CSS file
+  server-->>browser: CSS file
   deactivate server
 
   The browser fetches the JavaScript file linked in head tag in HTML document, main.js. 
@@ -36,6 +36,6 @@ sequenceDiagram
   The browser executes JavaScript code and fetches the JSON data ,data.json.
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
   activate server
-  server->>browser: JSON file
+  server-->>browser: JSON file
   deactivate server
   
