@@ -18,7 +18,7 @@ sequenceDiagram
   
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes 
   activate server 
-  server-->>browser: HTML document 
+  server->>browser: HTML document 
   deactivate server
 
   The browser fetches for the CSS file linked in head tag in HTML document, main.css. 
