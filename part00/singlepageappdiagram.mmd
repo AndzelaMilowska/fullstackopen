@@ -7,19 +7,19 @@ sequenceDiagram
   server->>browser: HTML document 
   deactivate server
 
-  The browser fetches for the CSS file linked in head tag in HTML document, main.css. 
+  Note right of browser: The browser fetches for the CSS file linked in head tag in HTML document, main.css. 
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
   activate server
   server->>browser: CSS file
   deactivate server
 
-  The browser fetches the JavaScript file linked in head tag in HTML document, spa.js. 
+  Note right of browser: The browser fetches the JavaScript file linked in head tag in HTML document, spa.js. 
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
   activate server 
   server->>browser: JavaScript file  
   deactivate server
 
-  The browser executes JavaScript code and fetches the JSON data ,data.json.
+  Note right of browser: The browser executes JavaScript code and fetches the JSON data ,data.json.
   browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
   activate server
   server->>browser: JSON file
