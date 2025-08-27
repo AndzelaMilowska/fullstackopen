@@ -1,13 +1,13 @@
 import React from "react";
-import Part from './Part'
+import Part from "./Part";
 
 export default function Content(props) {
-    const {parts, exercisesList} = props
+  const { partsList } = props;
   return (
     <div>
-      <Part part={parts[0]} exercises={exercisesList[0]} />
-      <Part part={parts[1]} exercises={exercisesList[1]} />
-      <Part part={parts[2]} exercises={exercisesList[2]} />
+      <Part partName={partsList[0].name} exercises={partsList[0].exercises} />
+      <Part partName={partsList[1].name} exercises={partsList[1].exercises} />
+      <Part partName={partsList[2].name} exercises={partsList[2].exercises} />
     </div>
-  )
+  );
 }
