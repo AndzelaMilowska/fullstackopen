@@ -50,8 +50,7 @@ app.get("/info", (request, response) => {
   let length = 0;
   Contact.find({}).then((contacts) => {
       console.log(contacts);
-      length = contacts.length;
-      response.json(contacts);
+      length = response.json(contacts).length;
     });
   let responseData = `<p>Phonebook has info for ${length} people</p>`;
   responseData += `<p>${new Date()}</p>`;
