@@ -1,0 +1,34 @@
+require("dotenv").config();
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+
+const password = process.argv[2];
+const url = process.env.MONGODB_URI;
+
+
+mongoose.connect(url);
+mongoose.set("strictQuery", false);
+
+mongoose.connect(url).then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch(error => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+  
+const contactSchema = new mongoose.Schema({
+  id: String,
+  name: String,
+  number: String,
+});
+
+contactSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject.id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+module.exports = mongoose.model('Contact', contactSchema)
+

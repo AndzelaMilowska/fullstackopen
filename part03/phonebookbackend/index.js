@@ -1,27 +1,34 @@
+require("dotenv").config();
 const express = require("express");
-var morgan = require('morgan')
+var morgan = require("morgan");
 const app = express();
-const cors = require('cors')
+const cors = require("cors");
 
-app.use(cors())
-app.use(express.static('dist'))
+app.use(cors());
+app.use(express.static("dist"));
 app.use(express.json());
 
-app.use(morgan(function (tokens, req, res) {
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    JSON.stringify(req.body)
-  ].join(' ')
-}))
+app.use(
+  morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "content-length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      JSON.stringify(req.body),
+    ].join(" ");
+  })
+);
 
 function generateId() {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
   return String(maxId + 1);
 }
+
+const Contact = require("./models/contact");
 
 let persons = [
   {
@@ -53,21 +60,25 @@ app.get("/info", (request, response) => {
   response.send(responseData);
 });
 
-//get request for all persons
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
-});
+    Contact.find({}).then((contacts) => {
+      console.log(contacts);
+      response.json(contacts);
+    });
+  });
 
 //get request for single person
 app.get("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  const person = persons.find((person) => person.id === id);
 
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  Contact.findById(id).then((contact) => {
+    if (contact) {
+      response.json(contact);
+    } else {
+      console.log('error')
+      response.status(404).end();
+    }
+  })
 });
 
 //delete request for single person
@@ -82,32 +93,32 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-
   if (!body.name || !body.number) {
-
     return response.status(400).json({
       error: "content missing",
     });
   }
 
-  if (persons.find((person) => person.name === body.name)) {
-    return response.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  // if (persons.find((person) => person.name === body.name)) {
+  //   return response.status(400).json({
+  //     error: "name must be unique",
+  //   });
+  // }
 
-  const person = {
-    id: generateId(),
+  const contact = new Contact({
+    id: body.id,
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
 
-  response.json(person);
+  contact.save().then((savedNote) => {
+    console.log("contact saved!");
+    response.json(savedNote);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
