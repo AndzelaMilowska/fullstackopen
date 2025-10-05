@@ -104,6 +104,22 @@ Contact.findByIdAndDelete(request.params.id)
     })
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+
+  const contact = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
+    .then(updatedContact => {
+      response.json(updatedContact)
+    })
+    .catch(error => next(error))
+});
+
+
 //post request for adding new person
 app.post("/api/persons", (request, response) => {
   const body = request.body;
