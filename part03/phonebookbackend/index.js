@@ -27,6 +27,9 @@ function generateId() {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
   return String(maxId + 1);
 }
+function generateRandomNumber() {
+    return Math.floor(Math.random() * 10000);
+  }
 
 const Contact = require("./models/contact");
 
@@ -106,7 +109,7 @@ app.post("/api/persons", (request, response) => {
   // }
 
   const contact = new Contact({
-    id: body.id,
+    id: generateRandomNumber(),
     name: body.name,
     number: body.number,
   });
