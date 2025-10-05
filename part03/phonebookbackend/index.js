@@ -23,6 +23,17 @@ app.use(
   })
 );
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+app.use(errorHandler)
+
 function generateId() {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
   return String(maxId + 1);
@@ -81,15 +92,16 @@ app.get("/api/persons/:id", (request, response) => {
       console.log('error')
       response.status(404).end();
     }
-  })
+  }).catch(error => next(error))
 });
 
 //delete request for single person
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
+Contact.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
 });
 
 //post request for adding new person
