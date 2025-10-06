@@ -7,7 +7,16 @@ export default function PersonForm({ newName, setNewName, newNumber, setNewNumbe
     if (!searchedPerson) {
       const newPerson = { name: newName, number: newNumber };
       services.create(newPerson).then((response) => {
-        setPersons([...persons, response]);
+console.log(response);
+        if (response.error) {
+          console.log(error);
+        setErrorMessage("This contact has already been removed from the server");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      } 
+      else {setPersons([...persons, response]);}
+        
       });
       messageText = newPerson.name + " has been successfully updated";
     } else if (

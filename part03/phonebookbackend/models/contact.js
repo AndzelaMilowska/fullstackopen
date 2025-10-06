@@ -17,7 +17,11 @@ mongoose.connect(url).then(result => {
   
 const contactSchema = new mongoose.Schema({
   id: String,
-  name: String,
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
   number: String,
 });
 
