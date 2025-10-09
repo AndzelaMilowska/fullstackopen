@@ -24,16 +24,16 @@ app.use(
 );
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.message, `that`);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
-  }else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message })}
-
-  next(error);
+  }else  if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+  next(error)
 };
-app.use(errorHandler);
+
 
 function generateId() {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
@@ -104,7 +104,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 });
 
 //post request for adding new person
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -128,9 +128,10 @@ app.post("/api/persons", (request, response) => {
   contact.save().then((savedNote) => {
     console.log("contact saved!");
     response.json(savedNote);
-  });
+  }).catch(error => next(error));
 });
 
+app.use(errorHandler);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

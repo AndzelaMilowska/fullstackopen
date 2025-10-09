@@ -14,7 +14,8 @@ const create = (newObject) => {
   return axios.post(baseUrl, newObject).then((response) => {
     return response.data;
   }).catch(error => {
-      console.error('Error saving data:', error);
+      console.error('Error creating data:', error);
+      throw error;
     });
 
 };

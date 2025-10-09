@@ -39,6 +39,7 @@ const App = () => {
         persons={persons}
         setPersons={setPersons}
         setMessage={setMessage}
+        setErrorMessage={setErrorMessage}
       />
 
       <Persons 
