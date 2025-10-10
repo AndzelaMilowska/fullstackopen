@@ -1,20 +1,20 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
+require('dotenv').config()
+const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI
 
 
-mongoose.connect(url);
-mongoose.set("strictQuery", false);
+mongoose.connect(url)
+mongoose.set('strictQuery', false)
 
-mongoose.connect(url).then(result => {
-    console.log('connected to MongoDB')
-  })
+mongoose.connect(url).then(() => {
+  console.log('connected to MongoDB')
+})
   .catch(error => {
     console.log('error connecting to MongoDB:', error.message)
   })
-  
+
 const contactSchema = new mongoose.Schema({
   id: String,
   name: {
@@ -27,13 +27,13 @@ const contactSchema = new mongoose.Schema({
     minLength: 8,
     validate: {
       validator: function(v) {
-        return /\d{2,3}-\d+/.test(v);
+        return /\d{2,3}-\d+/.test(v)
       },
       message: props => `${props.value} is not a valid phone number!`
     },
     required: true
   },
-});
+})
 
 contactSchema.set('toJSON', {
   transform: (document, returnedObject) => {

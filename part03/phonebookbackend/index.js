@@ -1,12 +1,12 @@
-require("dotenv").config();
-const express = require("express");
-var morgan = require("morgan");
-const app = express();
-const cors = require("cors");
+require('dotenv').config()
+const express = require('express')
+var morgan = require('morgan')
+const app = express()
+const cors = require('cors')
 
-app.use(cors());
-app.use(express.static("dist"));
-app.use(express.json());
+app.use(cors())
+app.use(express.static('dist'))
+app.use(express.json())
 
 app.use(
   morgan(function (tokens, req, res) {
@@ -14,103 +14,97 @@ app.use(
       tokens.method(req, res),
       tokens.url(req, res),
       tokens.status(req, res),
-      tokens.res(req, res, "content-length"),
-      "-",
-      tokens["response-time"](req, res),
-      "ms",
+      tokens.res(req, res, 'content-length'),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
       JSON.stringify(req.body),
-    ].join(" ");
+    ].join(' ')
   })
-);
+)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message, `that`);
+  console.error(error.message, 'that')
 
-  if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id" });
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
   }else  if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
   next(error)
-};
-
-
-function generateId() {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
-  return String(maxId + 1);
 }
+
 function generateRandomNumber() {
-  return Math.floor(Math.random() * 10000);
+  return Math.floor(Math.random() * 10000)
 }
 
-const Contact = require("./models/contact");
+const Contact = require('./models/contact')
 
 //get request for info page
-app.get("/info", (request, response) => {
-  let length = 0;
+app.get('/info', (request, response) => {
+  let length = 0
   Contact.find({}).then((contacts) => {
-    console.log(contacts);
-    length = contacts.length;
-    let responseData = `<p>Phonebook has info for ${length} people</p>`;
-    responseData += `<p>${new Date()}</p>`;
-    response.send(responseData);
-  });
-});
+    console.log(contacts)
+    length = contacts.length
+    let responseData = `<p>Phonebook has info for ${length} people</p>`
+    responseData += `<p>${new Date()}</p>`
+    response.send(responseData)
+  })
+})
 
-app.get("/api/persons", (request, response) => {
+app.get('/api/persons', (request, response) => {
   Contact.find({}).then((contacts) => {
-    console.log(contacts);
-    response.json(contacts);
-  });
-});
+    console.log(contacts)
+    response.json(contacts)
+  })
+})
 
 //get request for single person
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
+app.get('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id
 
   Contact.findById(id)
     .then((contact) => {
       if (contact) {
-        response.json(contact);
+        response.json(contact)
       } else {
-        console.log("error");
-        response.status(404).end();
+        console.log('error')
+        response.status(404).end()
       }
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
 //delete request for single person
-app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  Contact.findByIdAndDelete(request.params.id).then((result) => {
-    response.status(204).end();
-  });
-});
+app.delete('/api/persons/:id', (request, response) => {
+  Contact.findByIdAndDelete(request.params.id).then(() => {
+    response.status(204).end()
+  })
+})
 
-app.put("/api/persons/:id", (request, response, next) => {
-  const body = request.body;
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
   const contact = {
     name: body.name,
     number: body.number,
-  };
+  }
 
   Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
     .then((updatedContact) => {
-      response.json(updatedContact);
+      response.json(updatedContact)
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
 //post request for adding new person
-app.post("/api/persons", (request, response, next) => {
-  const body = request.body;
+app.post('/api/persons', (request, response, next) => {
+  const body = request.body
 
   if (!body.name || !body.number) {
     return response.status(400).json({
-      error: "content missing",
-    });
+      error: 'content missing',
+    })
   }
 
   // if (persons.find((person) => person.name === body.name)) {
@@ -123,16 +117,16 @@ app.post("/api/persons", (request, response, next) => {
     id: generateRandomNumber(),
     name: body.name,
     number: body.number,
-  });
+  })
 
   contact.save().then((savedNote) => {
-    console.log("contact saved!");
-    response.json(savedNote);
-  }).catch(error => next(error));
-});
+    console.log('contact saved!')
+    response.json(savedNote)
+  }).catch(error => next(error))
+})
 
-app.use(errorHandler);
-const PORT = process.env.PORT;
+app.use(errorHandler)
+const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
